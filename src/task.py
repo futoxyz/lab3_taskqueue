@@ -1,6 +1,5 @@
 from datetime import datetime
 from src.constants import STATUS_LIST
-from typing import runtime_checkable, Protocol
 
 
 class PositiveInteger:
@@ -40,17 +39,17 @@ class StrValidation:
 
 class Task:
     id = StrValidation("_id")
-    payload = StrValidation("_payload")
+    description = StrValidation("_payload")
     priority = PositiveInteger("_priority")
 
     def __init__(
             self,
             id: str,
-            payload: str,
+            description: str,
             priority: int = 0,
     ):
         self.id = id
-        self.payload = payload
+        self.description = description
         self.priority = priority
         self.created_at = datetime.now()
         self._status = "pending"
@@ -68,8 +67,3 @@ class Task:
     @property
     def age_seconds(self) -> float:
         return (datetime.now() - self.created_at).total_seconds()
-
-
-@runtime_checkable
-class TaskGiver(Protocol):
-    def get_tasks(self) -> list[Task]: pass

@@ -1,10 +1,16 @@
 from src.task import Task
 from src.constants import DESCRIPTIONS
+from typing import runtime_checkable, Protocol
 from os import path
 import logging
 import random
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='srcs.log', level=logging.INFO)
+
+
+@runtime_checkable
+class TaskGiver(Protocol):
+    def get_tasks(self) -> list[Task]: pass
 
 
 class APISource:
@@ -15,12 +21,12 @@ class APISource:
         tasks = []
         for i in range(1, self.amount + 1):
             current_task = Task(
-                id=f"task_{i}",
-                payload=random.choice(DESCRIPTIONS),
+                id=f"task_{random.randint(1, 1000)}",
+                description=random.choice(DESCRIPTIONS),
                 priority=random.randint(0, 20)
             )
             tasks.append(current_task)
-            logger.info(f"Initiated {current_task.id} with API, description \"{current_task.payload}\' and priority {current_task.priority}")
+            logger.info(f"Initiated {current_task.id} with API, description \"{current_task.description}\' and priority {current_task.priority}")
         return tasks
 
 
@@ -43,7 +49,7 @@ class FileSource:
                     id, description = line.split(maxsplit=1)
                     current_task = Task(
                         id=id,
-                        payload=description,
+                        description=description,
                         priority=i
                     )
                     tasks.append(current_task)
@@ -72,10 +78,10 @@ class RandomSource:
         tasks = []
         for i in range(1, self.amount + 1):
             current_task = Task(
-                id=f"task_{i}",
-                payload=random.choice(DESCRIPTIONS),
+                id=f"task_{random.randint(1, 1000)}",
+                description=random.choice(DESCRIPTIONS),
                 priority=i
             )
             tasks.append(current_task)
-            logger.info(f"Initiated {current_task.id} with generator, description \"{current_task.payload}\' and priority {current_task.priority}")
+            logger.info(f"Initiated {current_task.id} with generator, description \"{current_task.description}\' and priority {current_task.priority}")
         return tasks

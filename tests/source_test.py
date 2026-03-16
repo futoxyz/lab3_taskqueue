@@ -15,8 +15,8 @@ def test_generator_api() -> None:
     source_api = src.APISource(second)
     tasks_api = source_api.get_tasks()
 
-    assert isinstance(source_gen, task_ref.TaskGiver)
-    assert isinstance(source_api, task_ref.TaskGiver)
+    assert isinstance(source_gen, src.TaskGiver)
+    assert isinstance(source_api, src.TaskGiver)
 
     for task in tasks_gen:
         assert isinstance(task, task_ref.Task)
@@ -39,6 +39,6 @@ def test_file() -> None:
     print(source.get_tasks())
 
     tasks = source.get_tasks()
-    assert isinstance(source, task_ref.TaskGiver)
+    assert isinstance(source, src.TaskGiver)
     for task in tasks:
         assert isinstance(task, task_ref.Task)
