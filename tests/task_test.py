@@ -1,38 +1,38 @@
 import pytest
 from time import sleep
-from src.task import Task
+from src.task import Task, IntegerError, StringError, StatusError
 
 
 def test_tasks() -> None:
     '''
     Тесты дескрипторов.
     '''
-    with pytest.raises(ValueError): # Id and description test
+    with pytest.raises(StringError): # Id and description test
         task = Task("", "description")
-    with pytest.raises(TypeError):
+    with pytest.raises(StringError):
         task = Task(0, "description")
-    with pytest.raises(ValueError):
+    with pytest.raises(StringError):
         task = Task("some_id", "")
-    with pytest.raises(TypeError):
+    with pytest.raises(StringError):
         task = Task("some_id", 1)
 
-    with pytest.raises(ValueError): # Priority test
+    with pytest.raises(IntegerError): # Priority test
         task = Task("some_id", "description", -1)
-    with pytest.raises(TypeError):
+    with pytest.raises(IntegerError):
         task = Task("some_id", "description", "priority_1")
 
     normal_task = Task("id_1", "description", 1)
     assert normal_task.status == "pending"
-    with pytest.raises(ValueError):
+    with pytest.raises(StatusError):
         normal_task.status = "can't be a status"
-    with pytest.raises(ValueError):
+    with pytest.raises(StatusError):
         normal_task.status = 1010101
     normal_task.status = "in_progress"
     assert normal_task.status == "in_progress"
 
-    with pytest.raises(ValueError):
+    with pytest.raises(IntegerError):
         normal_task.priority = -1
-    with pytest.raises(TypeError):
+    with pytest.raises(IntegerError):
         normal_task.priority = "string"
 
 

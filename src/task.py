@@ -1,5 +1,17 @@
 from datetime import datetime
+from typing import Any
 from src.constants import STATUS_LIST
+
+
+class IntegerError(Exception):
+    def __init__(self, name: Any, type: int):
+        match type:
+            case 0:
+                super().__init__(f"{name} is not an integer!")
+            case 1:
+                super().__init__(f"{name} can't be negative!")
+            case _:
+                super().__init__(f"Undefined type given: {type}")
 
 
 class PositiveInteger:
@@ -13,11 +25,22 @@ class PositiveInteger:
 
     def __set__(self, instance, value):
         if not isinstance(value, int):
-            raise TypeError(f"{self.name} is not an integer!")
+            raise IntegerError(self.name, 0)
         if value < 0:
-            raise ValueError(f"{self.name} can't be negative!")
+            raise IntegerError(self.name, 1)
 
         instance.__dict__[self.name] = value
+
+
+class StringError(Exception):
+    def __init__(self, name: Any, type: int):
+        match type:
+            case 0:
+                super().__init__(f"{name} is not a string!")
+            case 1:
+                super().__init__(f"{name} can't be an empty line!")
+            case _:
+                super().__init__(f"Undefined type given: {type}")
 
 
 class StrValidation:
@@ -31,10 +54,15 @@ class StrValidation:
 
     def __set__(self, instance, value):
         if not isinstance(value, str):
-            raise TypeError(f"{self.name} is not a string!")
+            raise StringError(self.name, 0)
         if value == "":
-            raise ValueError(f"{self.name} can't be an empty line!")
+            raise StringError(self.name, 1)
         instance.__dict__[self.name] = value
+
+
+class StatusError(Exception):
+    def __init__(self, value: Any):
+            super().__init__(f"\"{value}\" can't be used as a status!")
 
 
 class Task:
@@ -61,7 +89,7 @@ class Task:
     @status.setter
     def status(self, value: str):
         if value not in STATUS_LIST:
-            raise ValueError(f"\"{value}\" can't be used as a status!")
+            raise StatusError(value)
         self._status = value
 
     @property
