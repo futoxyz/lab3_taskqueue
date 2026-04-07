@@ -1,6 +1,7 @@
 import pytest
 from time import sleep
-from src.task import Task, IntegerError, StringError, StatusError
+from src.task import Task
+from src.exceptions import IntegerError, StringError, StatusError
 
 
 def test_tasks() -> None:

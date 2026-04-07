@@ -1,6 +1,7 @@
 from src.source import RandomSource, TaskGiver
 from src.constants import COMMANDS, STATUS_LIST
-from src.task import TaskQueue, StatusError
+from src.queue import TaskQueue
+from src.exceptions import StatusError
 import shlex
 
 
@@ -31,7 +32,7 @@ def main() -> None:
                         new_status = str(input())
                         task.status = new_status
                         task_exists = True
-                        print("Successful")
+                        print("Status updated")
                         break
                 if not task_exists: raise ValueError("No such task")
             case "available-statuses":

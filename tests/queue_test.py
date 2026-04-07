@@ -1,6 +1,8 @@
 import pytest
 import random
-from src.task import Task, TaskQueue, TaskQueueError
+from src.task import Task
+from src.queue import TaskQueue
+from src.exceptions import TaskError
 from src.source import RandomSource
 
 
@@ -22,11 +24,11 @@ def test_task_queue():
     assert len(list(collection)) == amount - 1
 
     non_existing_task = Task("task_-1", "description", 1)
-    with pytest.raises(TaskQueueError):
+    with pytest.raises(TaskError):
         collection.delete(non_existing_task)
     
     assert collection.find(non_existing_task) is None
     some_task = collection.tasks[random.randint(0, amount - 1)]
     assert collection.find(some_task.id) == some_task
-    with pytest.raises(TaskQueueError):
+    with pytest.raises(TaskError):
         collection.add_task(some_task)
