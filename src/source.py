@@ -17,16 +17,17 @@ class APISource:
     def __init__(self, amount: int = 5):
         self.amount = amount
 
-    def get_tasks(self) -> list[Task]:
+    def get_tasks(self) -> list[Task] | Task:
         tasks = []
         for i in range(1, self.amount + 1):
             current_task = Task(
                 id=f"task_{random.randint(1, 1000)}",
                 description=random.choice(DESCRIPTIONS),
-                priority=random.randint(0, 20)
+                priority=random.randint(0, 10)
             )
             tasks.append(current_task)
             logger.info(f"Initiated {current_task.id} with API, description \"{current_task.description}\' and priority {current_task.priority}")
+        if self.amount == 1: return tasks[0]
         return tasks
 
 
@@ -74,14 +75,15 @@ class RandomSource:
     def __init__(self, amount: int = 5):
         self.amount = amount
 
-    def get_tasks(self) -> list[Task]:
+    def get_tasks(self) -> list[Task] | Task:
         tasks = []
         for i in range(1, self.amount + 1):
             current_task = Task(
                 id=f"task_{random.randint(1, 1000)}",
                 description=random.choice(DESCRIPTIONS),
-                priority=i
+                priority=random.randint(0, 10)
             )
             tasks.append(current_task)
             logger.info(f"Initiated {current_task.id} with generator, description \"{current_task.description}\' and priority {current_task.priority}")
+        if self.amount == 1: return tasks[0]
         return tasks

@@ -36,7 +36,6 @@ def test_file() -> None:
         source.get_tasks()
 
     source = src.FileSource("tests/tasks.txt")
-    print(source.get_tasks())
 
     tasks = source.get_tasks()
     assert isinstance(source, src.TaskGiver)
