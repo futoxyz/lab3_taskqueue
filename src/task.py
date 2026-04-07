@@ -107,6 +107,19 @@ class TaskQueue:
     def __iter__(self):
         for task in self.tasks:
             yield task
+    
+    def delete(self, task_del: Task):
+        for task in self:
+            if task == task_del:
+                self.tasks.remove(task)
+                return
+        raise IndexError(f"No such task: {task_del}")
+
+    def find(self, id: str) -> Task | None:
+        for task in self:
+            if task.id == id:
+                return task
+        return None
 
     def filter_by_priority(self, priority: int):
         for task in self:
