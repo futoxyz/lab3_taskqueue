@@ -4,14 +4,14 @@ from src.constants import STATUS_LIST
 
 
 class IntegerError(Exception):
-    def __init__(self, name: Any, type: int):
+    def __init__(self, name: Any, type: int = -1):
         match type:
             case 0:
                 super().__init__(f"{name} is not an integer!")
             case 1:
                 super().__init__(f"{name} can't be negative!")
             case _:
-                super().__init__(f"Undefined type given: {type}")
+                super().__init__(f"Undefined type given: {name}")
 
 
 class PositiveInteger:
@@ -33,14 +33,14 @@ class PositiveInteger:
 
 
 class StringError(Exception):
-    def __init__(self, name: Any, type: int):
+    def __init__(self, name: Any, type: int = -1):
         match type:
             case 0:
                 super().__init__(f"{name} is not a string!")
             case 1:
                 super().__init__(f"{name} can't be an empty line!")
             case _:
-                super().__init__(f"Undefined type given: {type}")
+                super().__init__(f"Undefined type given: {name}")
 
 
 class StrValidation:
@@ -97,12 +97,32 @@ class Task:
         return (datetime.now() - self.created_at).total_seconds()
 
 
+class TaskQueueError(Exception):
+    def __init__(self, value: Any, type: int = -1):
+        match type:
+            case 0:
+                super().__init__(f"No such task in queue -> {value}")
+            case 1:
+                super().__init__(f"Task id must be unique: task with similar id already exists -> {value}")
+            case _:
+                super().__init__(f"Undefined type given: {value}")
+
+
 class TaskQueue:
     def __init__(self, tasks: list[Task] | None = None):
         self.tasks: list[Task] = tasks if tasks else []
     
+    def find(self, id: str) -> Task | None:
+        for task in self:
+            if task.id == id:
+                return task
+        return None
+    
     def add_task(self, task: Task):
-        self.tasks.append(task)
+        if self.find(task.id) is None:
+            self.tasks.append(task)
+        else:
+            raise TaskQueueError(task, 1)
     
     def __iter__(self):
         for task in self.tasks:
@@ -113,13 +133,7 @@ class TaskQueue:
             if task == task_del:
                 self.tasks.remove(task)
                 return
-        raise IndexError(f"No such task: {task_del}")
-
-    def find(self, id: str) -> Task | None:
-        for task in self:
-            if task.id == id:
-                return task
-        return None
+        raise TaskQueueError(task, 0)
 
     def filter_by_priority(self, priority: int):
         for task in self:
