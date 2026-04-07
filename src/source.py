@@ -19,9 +19,10 @@ class APISource:
 
     def get_tasks(self) -> list[Task] | Task:
         tasks = []
+        ids = random.sample(range(1000), self.amount+1)
         for i in range(1, self.amount + 1):
             current_task = Task(
-                id=f"task_{random.randint(1, 1000)}",
+                id=f"task_{ids[i]}",
                 description=random.choice(DESCRIPTIONS),
                 priority=random.randint(0, 10)
             )
@@ -77,9 +78,10 @@ class RandomSource:
 
     def get_tasks(self) -> list[Task] | Task:
         tasks = []
+        ids = random.sample(range(1000), self.amount+1)
         for i in range(1, self.amount + 1):
             current_task = Task(
-                id=f"task_{random.randint(1, 1000)}",
+                id=f"task_{ids[i]}",
                 description=random.choice(DESCRIPTIONS),
                 priority=random.randint(0, 10)
             )
