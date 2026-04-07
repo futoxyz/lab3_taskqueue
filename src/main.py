@@ -1,14 +1,14 @@
 from src.source import RandomSource, TaskGiver
 from src.constants import COMMANDS, STATUS_LIST
-from src.task import TaskQueue
+from src.task import TaskQueue, StatusError
 import shlex
 
 
 def main() -> None:
-    print("Available commands:\n1. add-task\n2. show-tasks\n3. change-task-status\n4. available-statuses")
+    print(f"Available commands:\n- {"\n- ".join(COMMANDS)}")
     task_queue = TaskQueue()
     while inp := input():
-        if inp not in COMMANDS and inp != "available-statuses": continue
+        if inp not in COMMANDS: continue
         match inp:
             case "add-task":
                 tasks_rnd = RandomSource(1)
@@ -20,7 +20,7 @@ def main() -> None:
                     print("No active tasks")
                 else:
                     for task in task_queue:
-                        print(f"{task.id}: {task.description}. Priority - {task.priority}, status: {task.status}")
+                        print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
             case "change-task-status":
                 print("Enter the task id")
                 id = str(input())
@@ -36,6 +36,21 @@ def main() -> None:
                 if not task_exists: raise ValueError("No such task")
             case "available-statuses":
                 print(", ".join(STATUS_LIST))
+            case "filter-by-priority":
+                prio_filter = str(input("Enter the priority: "))
+                try:
+                    prio_filter = int(prio_filter)
+                except ValueError:
+                    raise ValueError(f"Priority must be integer: \"{prio_filter}\"")
+                else:
+                    for task in task_queue.filter_by_priority(prio_filter):
+                        print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
+            case "filter-by-status":
+                filter_status = str(input("Enter the status: "))
+                if filter_status not in STATUS_LIST:
+                    raise StatusError(filter_status)
+                for task in task_queue.filter_by_status(filter_status):
+                    print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
 
 
 
