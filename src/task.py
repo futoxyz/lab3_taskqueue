@@ -114,8 +114,19 @@ class TaskQueue:
                 yield task
 
     def filter_by_date(self, min_date: datetime):
+        '''
+        Для фильтра через данные datetime. Результат: таски, созданные ранее указанной даты.
+        '''
         for task in self:
             if task.created_at >= min_date:
+                yield task
+
+    def filter_by_days(self, days: int):
+        '''
+        Для фильтра по количеству дней. Результат: таски, с создания которых прошло меньше указанных дней.
+        '''
+        for task in self:
+            if (datetime.now() - task.created_at).days <= days:
                 yield task
     
     def filter_by_status(self, status: str):
