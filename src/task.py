@@ -95,3 +95,30 @@ class Task:
     @property
     def age_seconds(self) -> float:
         return (datetime.now() - self.created_at).total_seconds()
+
+
+class TaskQueue:
+    def __init__(self, tasks: list[Task] | None = None):
+        self.tasks: list[Task] = tasks if tasks else []
+    
+    def add_task(self, task: Task):
+        self.tasks.append(task)
+    
+    def __iter__(self):
+        for task in self.tasks:
+            yield task
+
+    def filter_by_priority(self, min_priority: int):
+        for task in self.tasks:
+            if task.priority >= min_priority:
+                yield task
+
+    def filter_by_date(self, min_date: datetime):
+        for task in self.tasks:
+            if task.created_at >= min_date:
+                yield task
+    
+    def filter_by_status(self, status: str):
+        for task in self.tasks:
+            if task.status == status:
+                yield task
