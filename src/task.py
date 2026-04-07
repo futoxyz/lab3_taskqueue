@@ -108,17 +108,17 @@ class TaskQueue:
         for task in self.tasks:
             yield task
 
-    def filter_by_priority(self, min_priority: int):
-        for task in self.tasks:
-            if task.priority >= min_priority:
+    def filter_by_priority(self, priority: int):
+        for task in self:
+            if task.priority == priority:
                 yield task
 
     def filter_by_date(self, min_date: datetime):
-        for task in self.tasks:
+        for task in self:
             if task.created_at >= min_date:
                 yield task
     
     def filter_by_status(self, status: str):
-        for task in self.tasks:
+        for task in self:
             if task.status == status:
                 yield task
