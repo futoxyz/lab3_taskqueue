@@ -28,7 +28,7 @@ TaskQueue — класс с поддержкой итерации базовых
 - **filter_by_days** — Фильтр по крайнему указанному целому количеству дней. Принимает на вход лишь число.
 
 # Функция main
-Доступны 6 команд: `add-task`, `show-tasks`, `change-task-status` **+** `available-statuses`, `filter-by-priority`, `filter-by-status`
+Доступны 6 команд: `add-task`, `show-tasks`, `change-task-status` **+** `available-statuses`, `find-task`, `filter-by-priority`, `filter-by-status`
 
 Работает с очередью задач. создаются через генератор, ошибки ввода попадаются валидаторами.
 
