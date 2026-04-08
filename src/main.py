@@ -16,27 +16,34 @@ def main() -> None:
                 if isinstance(tasks_rnd, TaskGiver):
                     task_queue.add_task(tasks_rnd.get_tasks())
                     print("Initiated task with generator")
+                    
             case "show-tasks":
                 if not task_queue:
                     print("No active tasks")
                 else:
                     for task in task_queue:
                         print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
+
             case "change-task-status":
-                print("Enter the task id")
-                id = str(input())
-                task_exists = False
-                for task in task_queue:
-                    if task.id == id:
-                        print("Enter new status")
-                        new_status = str(input())
-                        task.status = new_status
-                        task_exists = True
-                        print("Status updated")
-                        break
-                if not task_exists: raise ValueError("No such task")
+                id = str(input("Enter the task id: "))
+                task = task_queue.find(id)
+                if task:
+                    task.status = str(input("Enter new status: "))
+                    print("Status updated")
+                else:
+                    raise ValueError("No such task")
+
             case "available-statuses":
                 print(", ".join(STATUS_LIST))
+
+            case "find-task":
+                id = str(input("Enter the id: "))
+                task = task_queue.find(id)
+                if task:
+                    print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
+                else:
+                    print("Task was not found")
+
             case "filter-by-priority":
                 prio_filter = str(input("Enter the priority: "))
                 try:
@@ -46,13 +53,13 @@ def main() -> None:
                 else:
                     for task in task_queue.filter_by_priority(prio_filter):
                         print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
+
             case "filter-by-status":
                 filter_status = str(input("Enter the status: "))
                 if filter_status not in STATUS_LIST:
                     raise StatusError(filter_status)
                 for task in task_queue.filter_by_status(filter_status):
                     print(f"{task.id}: {task.description}. Priority: {task.priority}, Status: {task.status}")
-
 
 
 if __name__ == "__main__":
