@@ -5,30 +5,28 @@ from datetime import datetime
 
 class TaskQueue:
     def __init__(self, tasks: list[Task] | None = None):
-        self.tasks: list[Task] = tasks if tasks else []
+        self._tasks: dict[str, Task] = {t.id: t for t in tasks} if tasks else {}
 
     def __iter__(self):
-        for task in self.tasks:
+        for task in self._tasks.values():
             yield task
+    
+    def __len__(self):
+        return len(self._tasks)
 
     def find(self, id: str) -> Task | None:
-        for task in self:
-            if task.id == id:
-                return task
-        return None
-    
+        return self._tasks.get(id)
+
     def add_task(self, task: Task):
-        if self.find(task.id) is None:
-            self.tasks.append(task)
-        else:
+        if task.id in self._tasks:
             raise TaskError(task, 1)
-    
+        self._tasks[task.id] = task
+
     def delete(self, task_del: Task):
-        for task in self:
-            if task == task_del:
-                self.tasks.remove(task)
-                return
-        raise TaskError(task, 0)
+        if task_del.id in self._tasks:
+            del self._tasks[task_del.id]
+        else:
+            raise TaskError(task_del, 0)
 
     def filter_by_priority(self, priority: int):
         for task in self:

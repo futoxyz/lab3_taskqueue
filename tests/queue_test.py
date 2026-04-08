@@ -20,7 +20,7 @@ def test_task_queue():
         assert task == tasks[i]
         i += 1
     assert amount == i
-    collection.delete(collection.tasks[random.randint(0, amount - 1)])
+    collection.delete(random.choice(list(collection._tasks.values())))
     assert len(list(collection)) == amount - 1
 
     non_existing_task = Task("task_-1", "description", 1)
@@ -28,7 +28,7 @@ def test_task_queue():
         collection.delete(non_existing_task)
     
     assert collection.find(non_existing_task) is None
-    some_task = collection.tasks[random.randint(0, amount - 1)]
+    some_task = random.choice(list(collection._tasks.values()))
     assert collection.find(some_task.id) == some_task
     with pytest.raises(TaskError):
         collection.add_task(some_task)
