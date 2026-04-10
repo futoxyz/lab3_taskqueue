@@ -10,7 +10,7 @@ logging.basicConfig(filename='srcs.log', level=logging.INFO)
 
 @runtime_checkable
 class TaskGiver(Protocol):
-    def get_tasks(self) -> list[Task]: pass
+    def get_tasks(self) -> list[Task] | Task: ...
 
 
 class APISource:
