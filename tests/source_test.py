@@ -1,13 +1,13 @@
 import src.source as src
 import src.task as task_ref
-import random
-import pytest
-import os
+from pytest import raises
+from random import randint, seed
 
 
 def test_generator_api() -> None:
-    first = random.randint(10, 1000)
-    second = random.randint(10, 1000)
+    seed() # Сид генерации
+    first = randint(10, 1000)
+    second = randint(10, 1000)
 
     source_gen = src.RandomSource(first)
     tasks_gen = source_gen.get_tasks()
@@ -31,7 +31,7 @@ def test_file() -> None:
     '''
     Файл 'tasks.txt' заведомо имеет верный формат.
     '''
-    with pytest.raises(ValueError):
+    with raises(ValueError):
         source = src.FileSource("src/main.py")
         source.get_tasks()
 

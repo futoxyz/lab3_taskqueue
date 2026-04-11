@@ -1,5 +1,5 @@
-import pytest
-import random
+from pytest import raises
+from random import randint, choice, seed
 from src.task import Task
 from src.queue import TaskQueue
 from src.exceptions import TaskError
@@ -7,7 +7,8 @@ from src.source import RandomSource
 
 
 def test_task_queue():
-    amount = random.randint(10,500)
+    seed() # Сид генерации
+    amount = randint(10,500)
     source = RandomSource(amount)
     tasks = source.get_tasks()
 
@@ -20,15 +21,15 @@ def test_task_queue():
         assert task == tasks[i]
         i += 1
     assert amount == i
-    collection.delete(random.choice(list(collection._tasks.values())))
+    collection.delete(choice(list(collection._tasks.values())))
     assert len(list(collection)) == amount - 1
 
     non_existing_task = Task("task_-1", "description", 1)
-    with pytest.raises(TaskError):
+    with raises(TaskError):
         collection.delete(non_existing_task)
     
     assert collection.find(non_existing_task) is None
-    some_task = random.choice(list(collection._tasks.values()))
+    some_task = choice(list(collection._tasks.values()))
     assert collection.find(some_task.id) == some_task
-    with pytest.raises(TaskError):
+    with raises(TaskError):
         collection.add_task(some_task)
