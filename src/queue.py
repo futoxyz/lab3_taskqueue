@@ -3,14 +3,30 @@ from src.exceptions import TaskError
 from datetime import datetime
 
 
+class TaskIterator:
+    def __init__(self, tasks: dict[str, Task]):
+        self._tasks = tasks
+        self._keys = list(tasks.keys())
+        self._index = 0
+
+    def __next__(self):
+        if self._index >= len(self._keys):
+            raise StopIteration
+        current_key = self._keys[self._index]
+        self._index += 1
+        return self._tasks[current_key]
+
+    def __iter__(self):
+        return self
+
+
 class TaskQueue:
     def __init__(self, tasks: list[Task] | None = None):
         self._tasks: dict[str, Task] = {t.id: t for t in tasks} if tasks else {}
 
     def __iter__(self):
-        for task in self._tasks.values():
-            yield task
-    
+        return TaskIterator(self._tasks)
+
     def __len__(self):
         return len(self._tasks)
 
@@ -48,7 +64,7 @@ class TaskQueue:
         for task in self:
             if (datetime.now() - task.created_at).days <= days:
                 yield task
-    
+
     def filter_by_status(self, status: str):
         for task in self:
             if task.status == status:
